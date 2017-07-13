@@ -62,9 +62,23 @@ public abstract  class BlunoLibrary  extends Activity{
 	public void serialSend(String theString){
 		if (mConnectionState == connectionStateEnum.isConnected) {
 			byte[] b =hexStr2Str(theString);
+//			byte[] data = new byte[11];
+//			data[0] = 0x55;
+//			data[1] = (byte)((byte)0xaa & 0xff);
+//			data[2] =0x55;
+//			data[3] =0x55;
+//			data[4] =0x55;
+//			data[5] =0x55;
+//			data[6] =0x55;
+//			data[7] =0x55;
+//			data[8] =0x55;
+//			data[9] =0x55;
+//			data[10] =0x55;
 			mSCharacteristic.setValue(b);
 			//mSCharacteristic.setValue(theString);
+			mCommandCharacteristic.setValue(b);
 			mBluetoothLeService.writeCharacteristic(mSCharacteristic);
+			mBluetoothLeService.writeCharacteristic(mCommandCharacteristic);
 		}
 	}
 	
