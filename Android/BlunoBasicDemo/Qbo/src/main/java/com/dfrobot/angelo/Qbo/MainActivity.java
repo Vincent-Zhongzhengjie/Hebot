@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import io.github.controlwear.virtual.joystick.android.JoystickView;
 
+import static java.lang.Math.PI;
+
 public class MainActivity  extends BlunoLibrary {
 	private Button buttonScan;
 	private Button button1,button2,button3,button4,button5,button6;
@@ -111,6 +113,52 @@ public class MainActivity  extends BlunoLibrary {
 		joystick.setOnMoveListener(new JoystickView.OnMoveListener() {
 			@Override
 			public void onMove(int angle, int strength) {
+
+				int x=0,y=0;
+				double curves=0;
+				if(angle == 0){
+					x = 0;
+					y = strength * 255 /100;
+				}else if(angle < 90) {
+					curves = angle * PI /180;
+					x = (int)(255*strength / 100 * Math.sin(curves));
+					y = (int)(255*strength / 100 * Math.cos(curves));
+					//x = strength * 255 / 100;
+					//y = (int) (x / Math.tan(curves));
+				}else if(angle == 90){
+					x = strength * 255 / 100;
+					y = 0;
+				}else if(angle > 90 && angle <180){
+					curves = (180 - angle) * PI /180;
+					x = (int)(255*strength / 100 * Math.sin(curves));
+					y = -(int)(255*strength / 100 * Math.cos(curves));
+					//x = strength * 255 / 100;
+					//y = -(int)(x / Math.tan(curves));
+				}else if(angle == 180){
+					x = 0;
+					y = -strength * 255 / 100;
+				}else if(angle > 180 && angle < 270){
+					curves = (angle - 180) * PI /180;
+					x = -(int)(255*strength / 100 * Math.sin(curves));
+					y = -(int)(255*strength / 100 * Math.cos(curves));
+					//x = -strength * 255 / 100;
+					//y = (int)(x / Math.tan(curves));
+				}else if(angle == 270){
+					x = -strength * 255 / 100;
+					y = 0;
+				}else if(angle > 270){
+					curves = (360 - angle) * PI /180;
+					x = -(int)(255*strength / 100 * Math.sin(curves));
+					y = (int)(255*strength / 100 * Math.cos(curves));
+					//x = -strength * 255 / 100;
+					//y = (int)(x / Math.tan(curves));
+				}
+				System.out.println("angle:" + angle);
+				System.out.println("strength:" + strength);
+				System.out.println("curves:" + curves);
+				System.out.println("x:"+ x);
+				System.out.println("y:" + y);
+
 				// do whatever you want
 			}
 		});
