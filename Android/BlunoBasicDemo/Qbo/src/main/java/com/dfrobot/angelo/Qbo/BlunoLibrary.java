@@ -76,12 +76,23 @@ public abstract  class BlunoLibrary  extends Activity{
 //			data[10] =0x55;
 			mSCharacteristic.setValue(b);
 			//mSCharacteristic.setValue(theString);
-			mCommandCharacteristic.setValue(b);
+			//mCommandCharacteristic.setValue(b);
 			mBluetoothLeService.writeCharacteristic(mSCharacteristic);
 			mBluetoothLeService.writeCharacteristic(mCommandCharacteristic);
 		}
 	}
-	
+
+
+	public void serialSend(byte[] theByte){
+		if (mConnectionState == connectionStateEnum.isConnected) {
+
+			mSCharacteristic.setValue(theByte);
+			//mSCharacteristic.setValue(theString);
+			//mCommandCharacteristic.setValue(theByte);
+			mBluetoothLeService.writeCharacteristic(mSCharacteristic);
+			mBluetoothLeService.writeCharacteristic(mCommandCharacteristic);
+		}
+	}
 	private int mBaudrate=115200;	//set the default baud rate to 115200
 	private String mPassword="AT+PASSWOR=DFRobot\r\n";
 	

@@ -45,7 +45,7 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code1 = new String("55 aa 11 01 00 01 00 00 00 00 12");
+				String code1 = new String("55 aa 11 01 00 01 80 80 00 00 12");
 				serialSend(code1);				//send the data to the BLUNO
 			}
 		});
@@ -55,7 +55,7 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code2 = new String("55 aa 11 01 00 02 00 00 00 00 13");
+				String code2 = new String("55 aa 11 01 00 02 80 80 00 00 13");
 				serialSend(code2);				//send the data to the BLUNO
 			}
 		});
@@ -65,7 +65,7 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code3 = new String("55 aa 11 01 00 03 00 00 00 00 14");
+				String code3 = new String("55 aa 11 01 00 03 80 80 00 00 14");
 				serialSend(code3);				//send the data to the BLUNO
 			}
 		});
@@ -75,7 +75,7 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code4 = new String("55 aa 11 01 00 04 00 00 00 00 15");
+				String code4 = new String("55 aa 11 01 00 04 80 80 00 00 15");
 				serialSend(code4);				//send the data to the BLUNO
 			}
 		});
@@ -84,7 +84,7 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code5 = new String("55 aa 11 01 00 05 00 00 00 00 16");
+				String code5 = new String("55 aa 11 01 00 05 80 80 00 00 16");
 				serialSend(code5);				//send the data to the BLUNO
 			}
 		});
@@ -93,7 +93,7 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code6 = new String("55 aa 11 01 00 06 00 00 00 00 17");
+				String code6 = new String("55 aa 11 01 00 06 80 80 00 00 17");
 				serialSend(code6);				//send the data to the BLUNO
 			}
 		});
@@ -113,16 +113,19 @@ public class MainActivity  extends BlunoLibrary {
 		joystick.setOnMoveListener(new JoystickView.OnMoveListener() {
 			@Override
 			public void onMove(int angle, int strength) {
-
+				byte coordinate[] = {0x55,0x0,0x11,0x0,0x3,0x00,0x00,0x00,0x00,0x15};
+                coordinate[1] = (byte)(0xaa&0xff);
 				int x=0,y=0;
 				double curves=0;
 				if(angle == 0){
 					x = 0;
 					y = strength * 255 /100;
+
 				}else if(angle < 90) {
 					curves = angle * PI /180;
 					x = (int)(255*strength / 100 * Math.sin(curves));
 					y = (int)(255*strength / 100 * Math.cos(curves));
+
 					//x = strength * 255 / 100;
 					//y = (int) (x / Math.tan(curves));
 				}else if(angle == 90){
@@ -158,7 +161,15 @@ public class MainActivity  extends BlunoLibrary {
 				System.out.println("curves:" + curves);
 				System.out.println("x:"+ x);
 				System.out.println("y:" + y);
-
+                coordinate[1] = (byte)(0xaa&0xff);
+                coordinate[6] = (byte)(x & 0xff);
+                coordinate[7] = (byte)(y & 0xff);
+                int sum = 0;
+                for(int i=0;i<coordinate.length-1;i++){
+                    sum += coordinate[i];
+                }
+                coordinate[9] = (byte)( sum & 0xff);
+                serialSend(coordinate);
 				// do whatever you want
 			}
 		});
