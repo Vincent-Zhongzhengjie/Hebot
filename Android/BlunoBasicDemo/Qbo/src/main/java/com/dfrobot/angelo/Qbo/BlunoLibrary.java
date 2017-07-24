@@ -90,10 +90,10 @@ public abstract  class BlunoLibrary  extends Activity{
 
 	public void serialSend(byte[] theByte){
 		if (mConnectionState == connectionStateEnum.isConnected) {
-			if(System.currentTimeMillis() - lastTouchEventMillis <= repeatTouchEventDelay){
-				System.out.println("message too fast");
-				return;
-			}
+			//if(System.currentTimeMillis() - lastTouchEventMillis <= repeatTouchEventDelay){
+			//	System.out.println("message too fast");
+			//	return;
+			//}
 			mSCharacteristic.setValue(theByte);
 			//mSCharacteristic.setValue(theString);
 			//mCommandCharacteristic.setValue(theByte);

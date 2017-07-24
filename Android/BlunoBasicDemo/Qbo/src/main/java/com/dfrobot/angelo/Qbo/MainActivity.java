@@ -17,9 +17,44 @@ public class MainActivity  extends BlunoLibrary {
 
 	//private EditText serialSendText;
 	private TextView serialReceivedText;
-
+	private int joyX=0x80;
+	private int joyY=0x80;
 	//private byte[] b={55 aa 11 01 00 01 00 00 00 00 15};
+	private byte[] encodeCmd(int button){
 
+		if(button ==0) {
+			byte cmd[] = {0x55, 0x0, 0x11, 0x0, 0x0, 0x00, 0x00, 0x00, 0x00, 0x00};
+			cmd[1] = (byte) (0xaa & 0xff);
+			cmd[5] = (byte) (joyX & 0xff);
+			cmd[6] = (byte) (joyY & 0xff);
+
+			int sum = 0;
+			for(int i=0;i<cmd.length-1;i++){
+				sum += cmd[i];
+			}
+			cmd[9] = (byte)( sum & 0xff);
+			return cmd;
+
+		}else{
+			byte cmd[] = {0x55, 0x0, 0x11, 0x0, 0x0, 0x00, 0x00, 0x00, 0x00, 0x00,0x0};
+			cmd[1] = (byte) (0xaa & 0xff);
+			cmd[3] = (byte) 0x1;
+			cmd[5] = (byte)(button & 0xff);
+			cmd[6] = (byte) (joyX & 0xff);
+			cmd[7] = (byte) (joyY & 0xff);
+			int sum = 0;
+			for(int i=0;i<cmd.length-1;i++){
+				sum += cmd[i];
+			}
+			cmd[10] = (byte)( sum & 0xff);
+			return cmd;
+
+		}
+
+
+
+
+	};
 
 
 	@Override
@@ -46,8 +81,10 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code1 = new String("55 aa 11 01 00 01 80 80 00 00 12");
-				serialSend(code1);				//send the data to the BLUNO
+				byte[] cmd = encodeCmd(1);
+				//String code1 = new String("55 aa 11 01 00 01 80 80 00 00 12");
+				//button1.setAnimation();
+				serialSend(cmd);				//send the data to the BLUNO
 			}
 		});
 
@@ -56,8 +93,9 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code2 = new String("55 aa 11 01 00 02 80 80 00 00 13");
-				serialSend(code2);				//send the data to the BLUNO
+				byte[] cmd = encodeCmd(2);
+				//String code2 = new String("55 aa 11 01 00 02 80 80 00 00 13");
+				serialSend(cmd);				//send the data to the BLUNO
 			}
 		});
 
@@ -66,8 +104,9 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code3 = new String("55 aa 11 01 00 03 80 80 00 00 14");
-				serialSend(code3);				//send the data to the BLUNO
+				byte[] cmd = encodeCmd(3);
+				//String code3 = new String("55 aa 11 01 00 03 80 80 00 00 14");
+				serialSend(cmd);				//send the data to the BLUNO
 			}
 		});
 
@@ -76,8 +115,9 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code4 = new String("55 aa 11 01 00 04 80 80 00 00 15");
-				serialSend(code4);				//send the data to the BLUNO
+				byte[] cmd = encodeCmd(4);
+				//String code4 = new String("55 aa 11 01 00 04 80 80 00 00 15");
+				serialSend(cmd);				//send the data to the BLUNO
 			}
 		});
 		button5.setOnClickListener(new OnClickListener() {
@@ -85,8 +125,9 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code5 = new String("55 aa 11 01 00 05 80 80 00 00 16");
-				serialSend(code5);				//send the data to the BLUNO
+				byte[] cmd = encodeCmd(5);
+				//String code5 = new String("55 aa 11 01 00 05 80 80 00 00 16");
+				serialSend(cmd);				//send the data to the BLUNO
 			}
 		});
 		button6.setOnClickListener(new OnClickListener() {
@@ -94,8 +135,9 @@ public class MainActivity  extends BlunoLibrary {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String code6 = new String("55 aa 11 01 00 06 80 80 00 00 17");
-				serialSend(code6);				//send the data to the BLUNO
+				byte[] cmd = encodeCmd(6);
+				//String code6 = new String("55 aa 11 01 00 06 80 80 00 00 17");
+				serialSend(cmd);				//send the data to the BLUNO
 			}
 		});
 
@@ -114,74 +156,69 @@ public class MainActivity  extends BlunoLibrary {
 		joystick.setOnMoveListener(new JoystickView.OnMoveListener() {
 			@Override
 			public void onMove(int angle, int strength) {
-				byte coordinate[] = {0x55,0x0,0x11,0x0,0x3,0x00,0x00,0x00,0x00,0x15};
-                coordinate[1] = (byte)(0xaa&0xff);
-				int x=0,y=0;
+				//byte coordinate[] = {0x55,0x0,0x11,0x0,0x3,0x00,0x00,0x00,0x00,0x15};
+               // coordinate[1] = (byte)(0xaa&0xff);
+				int x=128,y=128;
 				double curves=0;
 				if(angle == 0){
-					x = 0;
+					x = 128;
+					if(strength >0) {
+						y = 128 + strength * 128 / 100;
+					}else {
+						y = 128;
+					}
+				}else if(angle > 0 && angle <90) {
 
-					y = strength * 255 /100;
-
-				}else if(angle < 90) {
 					curves = angle * PI /180;
-					x = (int)(255*strength / 100 * Math.sin(curves));
-					y = (int)(255*strength / 100 * Math.cos(curves));
+					x = (int)(128 + 128*strength / 100 * Math.sin(curves));
+					y = (int)(128 + 128*strength / 100 * Math.cos(curves));
 
-					//x = strength * 255 / 100;
-
-					y = strength * 128 /100;
-
-				}else if(angle < 90) {
-					curves = angle * PI /180;
-					x = (int)(128*strength / 100 * Math.sin(curves));
-					y = (int)(128*strength / 100 * Math.cos(curves));
-
-					//x = strength * 128 / 100;
-
-					//y = (int) (x / Math.tan(curves));
 				}else if(angle == 90){
-					x = strength * 128 / 100;
-					y = 0;
+
+					x = 128 + strength * 128 / 100;
+					y = 128;
+
 				}else if(angle > 90 && angle <180){
+
 					curves = (180 - angle) * PI /180;
-					x = (int)(128*strength / 100 * Math.sin(curves));
-					y = -(int)(128*strength / 100 * Math.cos(curves));
+					x = (int)(128 + (128*strength / 100 * Math.sin(curves)));
+					y = (int)(128 + (- 128*strength / 100 * Math.cos(curves)));
 					//x = strength * 128 / 100;
 					//y = -(int)(x / Math.tan(curves));
 				}else if(angle == 180){
-					x = 0;
-					y = -strength * 128 / 100;
+					x = 128;
+					y = 128 + (-strength * 128 / 100);
 				}else if(angle > 180 && angle < 270){
 					curves = (angle - 180) * PI /180;
-					x = -(int)(128*strength / 100 * Math.sin(curves));
-					y = -(int)(128*strength / 100 * Math.cos(curves));
+					x = -(int)(128*strength / 100 * Math.sin(curves)) + 128;
+					y = -(int)(128*strength / 100 * Math.cos(curves)) + 128;
 					//x = -strength * 128 / 100;
 					//y = (int)(x / Math.tan(curves));
 				}else if(angle == 270){
-					x = -strength * 128 / 100;
-					y = 0;
+					x = -strength * 128 / 100 + 128;
+					y = 128;
 				}else if(angle > 270){
 					curves = (360 - angle) * PI /180;
-					x = -(int)(128*strength / 100 * Math.sin(curves));
-					y = (int)(128*strength / 100 * Math.cos(curves));
+					x = -(int)(128*strength / 100 * Math.sin(curves)) + 128;
+					y = (int)(128*strength / 100 * Math.cos(curves)) + 128;
 					//x = -strength * 128 / 100;
 					//y = (int)(x / Math.tan(curves));
 				}
+
 				System.out.println("angle:" + angle);
 				System.out.println("strength:" + strength);
 				System.out.println("curves:" + curves);
 				System.out.println("x:"+ x);
 				System.out.println("y:" + y);
-                coordinate[1] = (byte)(0xaa&0xff);
-                coordinate[6] = (byte)(x & 0xff);
-                coordinate[7] = (byte)(y & 0xff);
-                int sum = 0;
-                for(int i=0;i<coordinate.length-1;i++){
-                    sum += coordinate[i];
-                }
-                coordinate[9] = (byte)( sum & 0xff);
-                serialSend(coordinate);
+
+				joyX = x;
+				joyY = y;
+
+                //coordinate[1] = (byte)(0xaa&0xff);
+                //coordinate[6] = (byte)(x & 0xff);
+                //coordinate[7] = (byte)(y & 0xff);
+				byte[] cmd = encodeCmd(0);
+                serialSend(cmd);
 				// do whatever you want
 			}
 		});
