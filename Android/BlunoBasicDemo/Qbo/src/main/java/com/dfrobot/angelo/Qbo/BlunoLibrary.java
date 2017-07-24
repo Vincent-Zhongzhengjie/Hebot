@@ -33,7 +33,8 @@ import java.util.Locale;
 public abstract  class BlunoLibrary  extends Activity{
 
 	private Context mainContext=this;
-	private long delayTimeMillisecond = 0;
+	private long lastTouchEventMillis = 0;
+	private long repeatTouchEventDelay = 50;
 	
 //	public BlunoLibrary(Context theContext) {
 //		
@@ -61,6 +62,10 @@ public abstract  class BlunoLibrary  extends Activity{
 
 	public void serialSend(String theString){
 		if (mConnectionState == connectionStateEnum.isConnected) {
+			if(System.currentTimeMillis() - lastTouchEventMillis <= repeatTouchEventDelay){
+				System.out.println("message too fast");
+				return;
+			}
 			byte[] b =hexStr2Str(theString);
 //			byte[] data = new byte[11];
 //			data[0] = 0x55;
@@ -85,7 +90,10 @@ public abstract  class BlunoLibrary  extends Activity{
 
 	public void serialSend(byte[] theByte){
 		if (mConnectionState == connectionStateEnum.isConnected) {
-
+			if(System.currentTimeMillis() - lastTouchEventMillis <= repeatTouchEventDelay){
+				System.out.println("message too fast");
+				return;
+			}
 			mSCharacteristic.setValue(theByte);
 			//mSCharacteristic.setValue(theString);
 			//mCommandCharacteristic.setValue(theByte);

@@ -120,7 +120,7 @@ public class MainActivity  extends BlunoLibrary {
 				double curves=0;
 				if(angle == 0){
 					x = 0;
-<<<<<<< HEAD
+
 					y = strength * 255 /100;
 
 				}else if(angle < 90) {
@@ -129,7 +129,7 @@ public class MainActivity  extends BlunoLibrary {
 					y = (int)(255*strength / 100 * Math.cos(curves));
 
 					//x = strength * 255 / 100;
-=======
+
 					y = strength * 128 /100;
 
 				}else if(angle < 90) {
@@ -138,7 +138,7 @@ public class MainActivity  extends BlunoLibrary {
 					y = (int)(128*strength / 100 * Math.cos(curves));
 
 					//x = strength * 128 / 100;
->>>>>>> correct 255 to 180
+
 					//y = (int) (x / Math.tan(curves));
 				}else if(angle == 90){
 					x = strength * 128 / 100;
