@@ -33,7 +33,7 @@ import java.util.Locale;
 public abstract  class BlunoLibrary  extends Activity{
 
 	private Context mainContext=this;
-
+	private long delayTimeMillisecond = 0;
 	
 //	public BlunoLibrary(Context theContext) {
 //		
