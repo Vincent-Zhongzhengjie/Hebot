@@ -5,20 +5,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-import io.github.controlwear.virtual.joystick.android.JoystickView;
-
 import static java.lang.Math.PI;
+import static java.lang.Math.abs;
 
 public class MainActivity  extends BlunoLibrary {
 	private Button buttonScan;
-	private Button button1,button2,button3,button4,button5,button6;
+	private ImageButton button1,button2,button3,button4,button5,button6;
+
 
 	//private EditText serialSendText;
 	private TextView serialReceivedText;
 	private int joyX=0x80;
 	private int joyY=0x80;
+	private int lastJoyX = 0x80;
+	private int lastJoyY = 0x80;
+	private boolean joyXUpdate = false;
+	private boolean joyYUpdate = false;
 	//private byte[] b={55 aa 11 01 00 01 00 00 00 00 15};
 	private byte[] encodeCmd(int button){
 
@@ -70,12 +75,12 @@ public class MainActivity  extends BlunoLibrary {
 
        // serialReceivedText=(TextView) findViewById(R.id.serialReveicedText);	//initial the EditText of the received data
       //  serialSendText=(EditText) findViewById(R.id.serialSendText);			//initial the EditText of the sending data
-		button1 = (Button) findViewById(R.id.button1);
-		button2 = (Button) findViewById(R.id.button2);
-		button3 = (Button) findViewById(R.id.button3);
-		button4 = (Button) findViewById(R.id.button4);
-		button5 = (Button) findViewById(R.id.button5);
-		button6 = (Button) findViewById(R.id.button6);
+		button1 = (ImageButton) findViewById(R.id.button1);
+		button2 = (ImageButton) findViewById(R.id.button2);
+		button3 = (ImageButton) findViewById(R.id.button3);
+		button4 = (ImageButton) findViewById(R.id.button4);
+		button5 = (ImageButton) findViewById(R.id.button5);
+		button6 = (ImageButton) findViewById(R.id.button6);
 		button1.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -211,14 +216,32 @@ public class MainActivity  extends BlunoLibrary {
 				System.out.println("x:"+ x);
 				System.out.println("y:" + y);
 
-				joyX = x;
-				joyY = y;
 
+
+
+				if(abs(x - lastJoyX) > 10){
+					joyX = x;
+					joyXUpdate = true;
+
+				}
+				if(abs(y - lastJoyY) > 10){
+					joyY = y;
+					joyYUpdate = true;
+				}
                 //coordinate[1] = (byte)(0xaa&0xff);
                 //coordinate[6] = (byte)(x & 0xff);
                 //coordinate[7] = (byte)(y & 0xff);
-				byte[] cmd = encodeCmd(0);
-                serialSend(cmd);
+
+				if(joyXUpdate || joyYUpdate ){
+					byte[] cmd = encodeCmd(0);
+					serialSend(cmd);
+					joyXUpdate = false;
+					joyYUpdate = false;
+					lastJoyX = joyX;
+					lastJoyY = joyY;
+
+				}
+
 				// do whatever you want
 			}
 		});

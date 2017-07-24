@@ -9,7 +9,8 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <io.github.controlwear.virtual.joystick.android.JoystickView
+    <view
+        class="com.dfrobot.angelo.Qbo.JoystickView"
         android:id="@+id/joystickView"
         android:layout_width="240dp"
         android:layout_height="240dp"
@@ -29,7 +30,7 @@
         android:layout_marginTop="60dp"
         />
 
-    <Button
+    <ImageButton
         android:id="@+id/button3"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -37,9 +38,9 @@
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
         android:layout_toStartOf="@+id/button2"
-        android:background="@drawable/cyclebutton" />
+        android:src="@drawable/cyclebutton"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/button1"
         style="@android:style/Widget.Button"
         android:layout_width="50dp"
@@ -48,42 +49,42 @@
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_toStartOf="@+id/button2"
-        android:background="@drawable/cyclebutton" />
+        android:src="@drawable/cyclebutton"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/button2"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="17dp"
-        android:background="@drawable/cyclebutton"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginEnd="17dp"
+        android:src="@drawable/cyclebutton" />
 
-    <Button
+    <ImageButton
         android:id="@+id/button4"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/cyclebutton"
+        android:src="@drawable/cyclebutton"
         android:layout_marginEnd="10dp"
         android:layout_centerVertical="true"
-
         android:layout_toStartOf="@+id/button1" />
 
-    <Button
+    <ImageButton
         android:id="@+id/button5"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_above="@+id/button4"
         android:layout_alignStart="@+id/bluetooth"
-        android:background="@drawable/linebutton" />
+        android:src="@drawable/linebutton"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/button6"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="@drawable/linebutton"
         android:layout_below="@+id/button4"
-        android:layout_alignStart="@+id/button5" />
+        android:layout_alignStart="@+id/button5"
+        android:src="@drawable/linebutton"/>
+
 
 
 </RelativeLayout>
