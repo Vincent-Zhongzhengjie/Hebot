@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 
-public class MainActivity  extends BlunoLibrary {
+public class MainActivity  extends BlunoLibrary implements GamepadImageButton.GamepadPressListener {
 	private Button buttonScan;
-	private ImageButton button1,button2,button3,button4,button5,button6;
+	private GamepadImageButton button1,button2,button3,button4,button5,button6;
 
 
 	//private EditText serialSendText;
@@ -25,7 +24,27 @@ public class MainActivity  extends BlunoLibrary {
 	private boolean joyXUpdate = false;
 	private boolean joyYUpdate = false;
 	//private byte[] b={55 aa 11 01 00 01 00 00 00 00 15};
-	private byte[] encodeCmd(int button){
+
+	@Override
+	public void onButtonAction(View v, boolean isPressed) {
+		byte[] cmd = encodeCmd(0,isPressed);
+		if(v == button1){
+			cmd = encodeCmd(1,isPressed);
+		}else if(v == button2){
+			cmd = encodeCmd(2,isPressed);
+		}else if(v == button3){
+			cmd = encodeCmd(3,isPressed);
+		}else if(v == button4){
+			cmd = encodeCmd(4,isPressed);
+		}else if(v == button5){
+			cmd = encodeCmd(5,isPressed);
+		}else if(v == button6){
+			cmd = encodeCmd(6,isPressed);
+		}
+		serialSend(cmd);
+
+	}
+	private byte[] encodeCmd(int button, boolean pressed){
 
 		if(button ==0) {
 			byte cmd[] = {0x55, 0x0, 0x11, 0x0, 0x0, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -75,12 +94,20 @@ public class MainActivity  extends BlunoLibrary {
 
        // serialReceivedText=(TextView) findViewById(R.id.serialReveicedText);	//initial the EditText of the received data
       //  serialSendText=(EditText) findViewById(R.id.serialSendText);			//initial the EditText of the sending data
-		button1 = (ImageButton) findViewById(R.id.button1);
-		button2 = (ImageButton) findViewById(R.id.button2);
-		button3 = (ImageButton) findViewById(R.id.button3);
-		button4 = (ImageButton) findViewById(R.id.button4);
-		button5 = (ImageButton) findViewById(R.id.button5);
-		button6 = (ImageButton) findViewById(R.id.button6);
+		button1 = (GamepadImageButton) findViewById(R.id.button1);
+		button2 = (GamepadImageButton) findViewById(R.id.button2);
+		button3 = (GamepadImageButton) findViewById(R.id.button3);
+		button4 = (GamepadImageButton) findViewById(R.id.button4);
+		button5 = (GamepadImageButton) findViewById(R.id.button5);
+		button6 = (GamepadImageButton) findViewById(R.id.button6);
+		button1.setGamepadPressListener(this);
+		button2.setGamepadPressListener(this);
+		button3.setGamepadPressListener(this);
+		button4.setGamepadPressListener(this);
+		button5.setGamepadPressListener(this);
+		button6.setGamepadPressListener(this);
+
+		/*
 		button1.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -145,7 +172,7 @@ public class MainActivity  extends BlunoLibrary {
 				serialSend(cmd);				//send the data to the BLUNO
 			}
 		});
-
+*/
 		buttonScan = (Button) findViewById(R.id.bluetooth);					//initial the button for scanning the BLE device
         buttonScan.setOnClickListener(new OnClickListener() {
 
@@ -233,7 +260,7 @@ public class MainActivity  extends BlunoLibrary {
                 //coordinate[7] = (byte)(y & 0xff);
 
 				if(joyXUpdate || joyYUpdate ){
-					byte[] cmd = encodeCmd(0);
+					byte[] cmd = encodeCmd(0,false);
 					serialSend(cmd);
 					joyXUpdate = false;
 					joyYUpdate = false;
