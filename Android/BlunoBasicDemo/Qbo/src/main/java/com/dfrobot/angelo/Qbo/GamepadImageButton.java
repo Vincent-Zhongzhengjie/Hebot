@@ -14,6 +14,7 @@ import android.view.View;
 
 public class GamepadImageButton extends AppCompatImageButton {
     private GamepadPressListener gamepadPressListener;
+    public boolean sPressed = false;
 
     public GamepadImageButton(Context context) {
         super(context);
@@ -32,13 +33,16 @@ public class GamepadImageButton extends AppCompatImageButton {
         int action = event.getAction();
         if (action == MotionEvent.ACTION_DOWN) {
             setPressed(true);
+            sPressed = true;
             if (gamepadPressListener != null) {
                 gamepadPressListener.onButtonAction(this, true);
             }
         } else if (action == MotionEvent.ACTION_UP ||
                 action == MotionEvent.ACTION_CANCEL) {
             setPressed(false);
+            sPressed = false;
             if (gamepadPressListener != null) {
+
                 gamepadPressListener.onButtonAction(this, false);
             }
         }

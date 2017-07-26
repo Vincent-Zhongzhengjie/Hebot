@@ -7,6 +7,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 
@@ -14,6 +16,20 @@ public class MainActivity  extends BlunoLibrary implements GamepadImageButton.Ga
 	private Button buttonScan;
 	private GamepadImageButton button1,button2,button3,button4,button5,button6;
 
+	private ArrayList<Byte> mButton = new ArrayList<Byte>();
+	private ArrayList<Byte> mCoordinate = new ArrayList<Byte>(){{
+		add((byte)0x80);
+		add((byte)0x80);
+		add((byte)0x0);
+		add((byte)0x0);
+	}};
+	private ArrayList<Byte> mCmd = new ArrayList<Byte>(){{
+		add((byte)0x55);
+		add((byte)((int)0xaa & 0xff));
+		add((byte)0x11);
+		add((byte)0x0);
+	}
+	};
 
 	//private EditText serialSendText;
 	private TextView serialReceivedText;
@@ -25,59 +41,77 @@ public class MainActivity  extends BlunoLibrary implements GamepadImageButton.Ga
 	private boolean joyYUpdate = false;
 	//private byte[] b={55 aa 11 01 00 01 00 00 00 00 15};
 
+
 	@Override
 	public void onButtonAction(View v, boolean isPressed) {
-		byte[] cmd = encodeCmd(0,isPressed);
+		int key = 0;
 		if(v == button1){
-			cmd = encodeCmd(1,isPressed);
+			key = 1;
 		}else if(v == button2){
-			cmd = encodeCmd(2,isPressed);
+			key = 2;
 		}else if(v == button3){
-			cmd = encodeCmd(3,isPressed);
+			key = 3;
 		}else if(v == button4){
-			cmd = encodeCmd(4,isPressed);
+			key = 4;
 		}else if(v == button5){
-			cmd = encodeCmd(5,isPressed);
+			key = 5;
 		}else if(v == button6){
-			cmd = encodeCmd(6,isPressed);
+			key = 6;
 		}
-		serialSend(cmd);
 
-	}
-	private byte[] encodeCmd(int button, boolean pressed){
-
-		if(button ==0) {
-			byte cmd[] = {0x55, 0x0, 0x11, 0x0, 0x0, 0x00, 0x00, 0x00, 0x00, 0x00};
-			cmd[1] = (byte) (0xaa & 0xff);
-			cmd[5] = (byte) (joyX & 0xff);
-			cmd[6] = (byte) (joyY & 0xff);
-
-			int sum = 0;
-			for(int i=0;i<cmd.length-1;i++){
-				sum += cmd[i];
+		if(isPressed){
+			if(!mButton.contains((byte)(key & 0xff))){
+				mButton.add((byte)(key & 0xff));
 			}
-			cmd[9] = (byte)( sum & 0xff);
-			return cmd;
-
 		}else{
-			byte cmd[] = {0x55, 0x0, 0x11, 0x0, 0x0, 0x00, 0x00, 0x00, 0x00, 0x00,0x0};
-			cmd[1] = (byte) (0xaa & 0xff);
-			cmd[3] = (byte) 0x1;
-			cmd[5] = (byte)(button & 0xff);
-			cmd[6] = (byte) (joyX & 0xff);
-			cmd[7] = (byte) (joyY & 0xff);
-			int sum = 0;
-			for(int i=0;i<cmd.length-1;i++){
-				sum += cmd[i];
-			}
-			cmd[10] = (byte)( sum & 0xff);
-			return cmd;
+			mButton.remove(mButton.indexOf((byte)(key & 0xff)));
+		}
+		/*fill corrdinate */
+		mCoordinate.set(0, (byte) (joyX & 0xff));
+		mCoordinate.set(1, (byte) (joyY & 0xff));
+		mCmd.add(2, (byte) (mButton.size()));
+		if(mButton.size()>0) {
+		/*set pressed button number in cmd*/
+			mCmd.addAll(mButton);
 
 		}
+		mCmd.addAll(mCoordinate);
+		int sum = 0;
+		for(int i =0;i<mCmd.size();i++){
+			sum = sum + mCmd.get(i);
+		}
+		mCmd.add((byte)(sum & 0xff));
+		byte[] cmd = encodeCmd();
+		serialSend(cmd);
+	}
+	private byte[] encodeCmd(){
 
+	/*fill corrdinate */
+		mCoordinate.set(0, (byte) (joyX & 0xff));
+		mCoordinate.set(1, (byte) (joyY & 0xff));
+		mCmd.add(2, (byte) (mButton.size()));
+		if(mButton.size()>0) {
+		/*set pressed button number in cmd*/
+			mCmd.addAll(mButton);
 
+		}
+		mCmd.addAll(mCoordinate);
+		int sum = 0;
+		for(int i =0;i<mCmd.size();i++){
+			sum = sum + mCmd.get(i);
+		}
+		mCmd.add((byte)(sum & 0xff));
 
+		byte[] cmd = new byte[mCmd.size()];
+		for(int i=0; i <mCmd.size();i++){
+			cmd[i] = mCmd.get(i);
+		}
 
+		for(int i=mCmd.size();mCmd.size()>4;i--){
+			mCmd.remove(i-1);
+		}
+		mCmd.set(mCmd.size()-1,(byte)0);
+		return cmd;
 	};
 
 
@@ -85,6 +119,7 @@ public class MainActivity  extends BlunoLibrary implements GamepadImageButton.Ga
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
         onCreateProcess();														//onCreate Process by BlunoLibrary
 
@@ -260,7 +295,7 @@ public class MainActivity  extends BlunoLibrary implements GamepadImageButton.Ga
                 //coordinate[7] = (byte)(y & 0xff);
 
 				if(joyXUpdate || joyYUpdate ){
-					byte[] cmd = encodeCmd(0,false);
+					 byte[] cmd = encodeCmd();
 					serialSend(cmd);
 					joyXUpdate = false;
 					joyYUpdate = false;
