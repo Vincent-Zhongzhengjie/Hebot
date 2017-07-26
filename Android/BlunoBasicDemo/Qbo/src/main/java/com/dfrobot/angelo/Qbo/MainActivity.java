@@ -66,30 +66,24 @@ public class MainActivity  extends BlunoLibrary implements GamepadImageButton.Ga
 		}else{
 			mButton.remove(mButton.indexOf((byte)(key & 0xff)));
 		}
-		/*fill corrdinate */
-		mCoordinate.set(0, (byte) (joyX & 0xff));
-		mCoordinate.set(1, (byte) (joyY & 0xff));
-		mCmd.add(2, (byte) (mButton.size()));
-		if(mButton.size()>0) {
-		/*set pressed button number in cmd*/
-			mCmd.addAll(mButton);
 
-		}
-		mCmd.addAll(mCoordinate);
-		int sum = 0;
-		for(int i =0;i<mCmd.size();i++){
-			sum = sum + mCmd.get(i);
-		}
-		mCmd.add((byte)(sum & 0xff));
 		byte[] cmd = encodeCmd();
 		serialSend(cmd);
 	}
-	private byte[] encodeCmd(){
 
+
+	private byte[] encodeCmd(){
+		 ArrayList<Byte> mCmd = new ArrayList<Byte>(){{
+			add((byte)0x55);
+			add((byte)((int)0xaa & 0xff));
+			add((byte)0x11);
+			add((byte)0x0);
+		}
+		};
 	/*fill corrdinate */
 		mCoordinate.set(0, (byte) (joyX & 0xff));
 		mCoordinate.set(1, (byte) (joyY & 0xff));
-		mCmd.add(2, (byte) (mButton.size()));
+		mCmd.add(3, (byte) (mButton.size()&0xff));
 		if(mButton.size()>0) {
 		/*set pressed button number in cmd*/
 			mCmd.addAll(mButton);
@@ -106,11 +100,12 @@ public class MainActivity  extends BlunoLibrary implements GamepadImageButton.Ga
 		for(int i=0; i <mCmd.size();i++){
 			cmd[i] = mCmd.get(i);
 		}
-
+/*
 		for(int i=mCmd.size();mCmd.size()>4;i--){
 			mCmd.remove(i-1);
 		}
 		mCmd.set(mCmd.size()-1,(byte)0);
+		*/
 		return cmd;
 	};
 
