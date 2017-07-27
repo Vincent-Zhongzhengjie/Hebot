@@ -12,14 +12,14 @@
     <view
         class="com.dfrobot.angelo.Qbo.JoystickView"
         android:id="@+id/joystickView"
-        android:layout_width="240dp"
-        android:layout_height="240dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:background="@drawable/cycleborder2"
         custom:JV_buttonImage="@drawable/core"
-        android:layout_marginLeft="2dp"
-        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        custom:JV_fixedCenter="true"
 
-        custom:JV_fixedCenter="true" />
+        android:layout_alignBottom="@+id/button3" />
 
     <Button
 
