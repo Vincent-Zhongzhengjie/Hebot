@@ -12,8 +12,8 @@
     <view
         class="com.dfrobot.angelo.Qbo.JoystickView"
         android:id="@+id/joystickView"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:background="@drawable/cycleborder2"
         custom:JV_buttonImage="@drawable/core"
         android:layout_marginLeft="30dp"
@@ -24,51 +24,51 @@
     <Button
 
         android:id="@+id/bluetooth"
-        android:layout_width="30dp"
-        android:layout_height="20dp"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
         android:background="@drawable/bluetooth"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         />
 
     <view
         class="com.dfrobot.angelo.Qbo.GamepadImageButton"
         android:id="@+id/button3"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_below="@+id/button2"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
         android:layout_toStartOf="@+id/button2"
-        android:src="@drawable/cyclebutton"/>
+        android:src="@drawable/gamepad_style"/>
 
     <view
         class="com.dfrobot.angelo.Qbo.GamepadImageButton"
         android:id="@+id/button1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_above="@+id/button4"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         android:layout_toStartOf="@+id/button2"
-        android:src="@drawable/cyclebutton"/>
+        android:src="@drawable/gamepad_style"/>
 
     <view
         class="com.dfrobot.angelo.Qbo.GamepadImageButton"
         android:id="@+id/button2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="17dp"
-        android:src="@drawable/cyclebutton" />
+        android:src="@drawable/gamepad_style" />
 
     <view
         class="com.dfrobot.angelo.Qbo.GamepadImageButton"
         android:id="@+id/button4"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/cyclebutton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/gamepad_style"
         android:layout_marginEnd="10dp"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/button1" />
@@ -76,19 +76,19 @@
     <view
         class="com.dfrobot.angelo.Qbo.GamepadImageButton"
         android:id="@+id/button5"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_above="@+id/button4"
         android:layout_alignStart="@+id/bluetooth"
-        android:src="@drawable/linebutton"/>
+        android:src="@drawable/line_btn_style"/>
 
     <view
         class="com.dfrobot.angelo.Qbo.GamepadImageButton"
         android:id="@+id/button6"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/line_btn_style"
         android:layout_below="@+id/button4"
-        android:layout_alignStart="@+id/button5"
-        android:src="@drawable/linebutton"/>
+        android:layout_alignStart="@+id/button5" />
 
 </RelativeLayout>
